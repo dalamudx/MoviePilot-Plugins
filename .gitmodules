@@ -1,0 +1,9 @@
+[submodule "modules/DDS-Derek"]
+	path = modules/DDS-Derek
+	url = https://github.com/DDS-Derek/MoviePilot-Plugins.git
+[submodule "modules/InfinityPacer"]
+	path = modules/InfinityPacer
+	url = https://github.com/InfinityPacer/MoviePilot-Plugins.git
+[submodule "modules/thsrite"]
+	path = modules/thsrite
+	url = https://github.com/thsrite/MoviePilot-Plugins.git
