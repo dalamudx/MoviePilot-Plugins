@@ -12,7 +12,7 @@ from plexapi.library import LibrarySection
 
 from app.chain.mediaserver import MediaServerChain
 from app.chain.tmdb import TmdbChain
-from app.core.cache import cache_backend
+from app.core.cache import Cache
 from app.core.context import MediaInfo
 from app.log import logger
 from app.plugins import PluginChian
@@ -841,6 +841,7 @@ class ScrapeHelper:
         """
         清理缓存
         """
-        cache_backend.clear(region="plex_tmdb_media")
-        cache_backend.clear(region="plex_tmdb_person")
-        cache_backend.clear(region="plex_douban_media")
+        cache = Cache()
+        cache.clear(region="plex_tmdb_media")
+        cache.clear(region="plex_tmdb_person")
+        cache.clear(region="plex_douban_media")
