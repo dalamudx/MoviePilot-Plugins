@@ -21,33 +21,6 @@ MoviePilot插件集合 - 整合了三个优秀的插件仓库，部分插件进�
 - **特色**: 全面的媒体库管理和云盘工具
 - **主要插件**: Emby增强、云盘管理、媒体处理等
 
-## 🚀 快速开始
-
-### 方法一：直接下载使用
-
-1. 下载本仓库到本地
-2. 将需要的插件文件夹复制到MoviePilot的插件目录
-3. 在MoviePilot中启用相应插件
-
-### 方法二：使用Git Submodule（推荐）
-
-如果你想要保持与原仓库的同步更新：
-
-```bash
-# 克隆本仓库
-git clone https://github.com/dalamudx/MoviePilot-Plugins.git
-cd MoviePilot-Plugins
-
-# 初始化并更新子模块
-git submodule init
-git submodule update
-
-# 整合所有插件到根目录
-./scripts/integrate_modules.sh
-
-# 合并package文件
-python3 ./scripts/merge_packages.py
-```
 
 ## 📁 目录结构
 
@@ -66,11 +39,6 @@ MoviePilot-Plugins/
 │   ├── DDS-Derek/
 │   ├── InfinityPacer/
 │   └── thsrite/
-├── scripts/           # 管理脚本目录
-│   ├── integrate_modules.sh   # 整合脚本
-│   ├── merge_packages.py      # 合并脚本
-│   ├── check_icons.py         # 图标检查脚本
-│   └── update_all.sh          # 一键更新脚本
 ├── package.json       # v1插件包配置
 ├── package.v2.json    # v2插件包配置
 └── README.md          # 本文件
@@ -112,33 +80,6 @@ MoviePilot-Plugins/
 - 下载监控
 - 命中率优化
 
-## 📋 使用说明
-
-1. **插件安装**: 将对应的插件文件夹复制到MoviePilot的插件目录
-2. **配置插件**: 在MoviePilot管理界面中配置插件参数
-3. **查看文档**: 每个插件都有详细的使用文档，请参考docs目录
-4. **问题反馈**: 遇到问题请到对应的原仓库提交Issue
-
-## 🔄 更新说明
-
-### 自动更新子模块
-
-```bash
-# 更新所有子模块到最新版本
-git submodule update --remote
-
-# 重新整合插件
-./scripts/integrate_modules.sh
-python3 ./scripts/merge_packages.py
-
-# 或者使用一键更新脚本
-./scripts/update_all.sh
-```
-
-### 手动更新
-
-定期检查原仓库的更新，手动同步最新的插件版本。
-
 ## ⚠️ 注意事项
 
 1. **插件兼容性**: 请确保插件与你的MoviePilot版本兼容
@@ -159,11 +100,8 @@ python3 ./scripts/merge_packages.py
 
 ## 📄 许可证
 
-本项目遵循各个子模块的原始许可证：
+本项目遵循MIT许可证，详见 [LICENSE](LICENSE) 文件。
 
-- DDS-Derek模块: 请查看 `LICENSE_DDS-Derek`
-- InfinityPacer模块: 请查看 `LICENSE_InfinityPacer`  
-- thsrite模块: 请查看 `LICENSE_thsrite`
 
 ## 🙏 致谢
 
@@ -179,35 +117,6 @@ python3 ./scripts/merge_packages.py
 
 - 提交Issue到本仓库
 - 或者到对应的原仓库寻求帮助
-
----
-
-## 🛠️ 管理脚本
-
-本项目提供了完整的管理脚本，位于 `scripts/` 目录下：
-
-### 主要脚本
-
-- **`integrate_modules.sh`** - 整合三个子模块的文件到根目录
-- **`merge_packages.py`** - 合并package文件并修改icon链接
-- **`check_icons.py`** - 检查icon链接修改情况
-- **`update_all.sh`** - 一键更新所有子模块并重新整合
-
-### 使用示例
-
-```bash
-# 整合模块
-./scripts/integrate_modules.sh
-
-# 合并package文件
-python3 ./scripts/merge_packages.py
-
-# 检查图标链接
-python3 ./scripts/check_icons.py
-
-# 一键更新
-./scripts/update_all.sh
-```
 
 ---
 
