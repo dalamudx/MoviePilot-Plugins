@@ -1,7 +1,6 @@
 import base64
 import io
 import time
-import json
 from datetime import datetime
 from dataclasses import asdict
 from typing import Dict, Any, Optional
@@ -10,7 +9,7 @@ from urllib.parse import quote
 
 import qrcode
 import requests
-from orjson import dumps
+from orjson import dumps, loads
 from p115client import P115Client
 from p115client.exception import DataError
 from p115client.tool.fs_files import iter_fs_files
@@ -515,7 +514,7 @@ class Api:
             data = AliyunPanLogin.ck(t_param, ck_param).get("content")
             if data["data"]["qrCodeStatus"] == "CONFIRMED":
                 h = data["data"]["bizExt"]
-                c = json.loads(base64.b64decode(h).decode("gbk"))
+                c = loads(base64.b64decode(h).decode("gbk"))
                 refresh_token = c["pds_login_result"]["refreshToken"]
                 if refresh_token:
                     configer.update_config({"aliyundrive_token": refresh_token})
@@ -627,6 +626,20 @@ class Api:
             return {"code": 0, "msg": "全量同步任务已启动"}
         except Exception as e:
             return {"code": 1, "msg": f"启动全量同步任务失败: {str(e)}"}
+
+    def trigger_full_sync_db_api(self) -> Dict:
+        """
+        触发全量同步数据库
+        """
+        try:
+            if not configer.get_config("enabled") or not configer.get_config("cookies"):
+                return {"code": 1, "msg": "插件未启用或未配置cookie"}
+
+            servicer.start_full_sync_db()
+
+            return {"code": 0, "msg": "全量同步数据库任务已启动"}
+        except Exception as e:
+            return {"code": 1, "msg": f"启动全量同步数据库任务失败: {str(e)}"}
 
     def trigger_share_sync_api(self) -> Dict:
         """

@@ -1,8 +1,8 @@
-import json
-import platform
+from platform import system, release
 from typing import Dict, Any, Optional, List, Union
 from pathlib import Path
 
+from orjson import loads, JSONDecodeError
 from pydantic import BaseModel, ValidationError, Field
 
 from app.log import logger
@@ -37,11 +37,11 @@ class ConfigManager(BaseModel):
         )
 
     @staticmethod
-    def _get_default_plugin_database_path() -> Path:
+    def _get_default_plugin_database_script_location() -> Path:
         """
         返回默认的插件数据库结构目录路径
         """
-        return settings.ROOT_PATH / "app/plugins/p115strmhelper/database"
+        return settings.ROOT_PATH / "app" / "plugins" / "p115strmhelper" / "database"
 
     @staticmethod
     def _get_default_plugin_temp_path() -> Path:
@@ -65,9 +65,12 @@ class ConfigManager(BaseModel):
     # 插件数据库目录
     PLUGIN_DB_PATH: Path = Field(default_factory=_get_default_plugin_db_path)
     # 插件数据库表目录
-    PLUGIN_DATABASE_PATH: Path = Field(
-        default_factory=_get_default_plugin_database_path
+    PLUGIN_DATABASE_SCRIPT_LOCATION: Path = Field(
+        default_factory=_get_default_plugin_database_script_location
     )
+    PLUGIN_DATABASE_VERSION_LOCATIONS: List[str] = [
+        str(_get_default_plugin_config_path() / "database/versions")
+    ]
     # 插件临时目录
     PLUGIN_TEMP_PATH: Path = Field(default_factory=_get_default_plugin_temp_path)
 
@@ -309,8 +312,8 @@ class ConfigManager(BaseModel):
         从JSON字符串加载配置
         """
         try:
-            return self.load_from_dict(json.loads(json_str))
-        except json.JSONDecodeError:
+            return self.load_from_dict(loads(json_str))
+        except JSONDecodeError:
             logger.error("【配置管理器】无效的JSON格式")
             return False
 
@@ -330,7 +333,7 @@ class ConfigManager(BaseModel):
         """
         self._update_aliyun_token()
         json_string = self.json()
-        serializable_dict = json.loads(json_string)
+        serializable_dict = loads(json_string)
         return serializable_dict
 
     def update_config(self, updates: Dict[str, Any]) -> bool:
@@ -352,14 +355,14 @@ class ConfigManager(BaseModel):
             logger.error(f"【配置管理器】配置更新失败: {e.json()}")
             return False
 
-    def update_plugin_config(self):
+    def update_plugin_config(self) -> Optional[bool]:
         """
         将当前配置状态保存到数据库
         """
         systemconfig = SystemConfigOper()
         plugin_id = self.PLUSIN_NAME
         json_string = self.json()
-        serializable_dict = json.loads(json_string)
+        serializable_dict = loads(json_string)
         return systemconfig.set(f"plugin.{plugin_id}", serializable_dict)
 
     def get_user_agent(self, utype: int = -1) -> str:
@@ -376,7 +379,7 @@ class ConfigManager(BaseModel):
             return user_agents[utype]
         return (
             f"{self.PLUSIN_NAME}/{VERSION} "
-            f"({platform.system()} {platform.release()}; "
+            f"({system()} {release()}; "
             f"{SystemUtils.cpu_arch() if hasattr(SystemUtils, 'cpu_arch') and callable(SystemUtils.cpu_arch) else 'UnknownArch'})"
         )
 
